@@ -73,7 +73,6 @@ public class FXMainController {
                 Image i = MatFXConversionUtil.convertToFxImage(outputImages[newValue.intValue()]);
                 outputImageView.setImage(i);
                 outputImageView.setFitWidth(outputImageScrollPane.getWidth());
-
             }
         });
     }
