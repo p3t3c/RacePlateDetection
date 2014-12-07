@@ -1,6 +1,5 @@
 package race.plate.detection.imageprocessing;
 
-import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import java.util.List;
 
