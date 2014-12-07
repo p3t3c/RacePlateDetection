@@ -67,7 +67,7 @@ public class FXMainController {
         outputImageToolTip.textProperty().bind(outputImageIndex.asString());
 
         outputImageIndex.addListener(new ChangeListener<Number>() {
-
+            // TODO Write this in a cleaner way
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 Image i = MatFXConversionUtil.convertToFxImage(outputImages[newValue.intValue()]);
