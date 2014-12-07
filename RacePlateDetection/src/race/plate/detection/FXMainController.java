@@ -21,7 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
+import race.plate.detection.imageprocessing.ColorPlaneExtractionAlgorithm;
 import race.plate.detection.imageprocessing.FindRectanglesAlgorithm;
+import race.plate.detection.imageprocessing.RedBoxedPlateAlgorithm;
 import race.plate.detection.util.MatFXConversionUtil;
 
 public class FXMainController {
@@ -79,7 +81,11 @@ public class FXMainController {
 
     @FXML
     protected void handleExecuteButtonAction(ActionEvent action) {
-        imageControl.applyProcessing(new FindRectanglesAlgorithm());
+        /*
+         * Here is where the algorithm is specified.
+         * TODO make it clearer where the algorthm is.
+         */
+        imageControl.applyProcessing(new RedBoxedPlateAlgorithm());
         outputImages = imageControl.getOutputImageSequence();
         outputImageIndex.set(outputImages.length - 1);
     }
@@ -113,7 +119,6 @@ public class FXMainController {
                 else
                     outputImageIndex.set(outputImageIndex.get() - 1);
             }
-            System.out.println(outputImageIndex);
         }
     }
 
