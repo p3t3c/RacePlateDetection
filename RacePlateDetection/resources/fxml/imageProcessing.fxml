@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="race.plate.detection.FXMainController">
+   <center>
+      <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <items>
+            <ScrollPane fx:id="inputImageScrollPane" fitToHeight="true" fitToWidth="true" onScroll="#handleInputImageScroll" pannable="true">
+               <content>
+                  <ImageView id="inputImageView" fx:id="inputImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="outputImageScrollPane" onScroll="#handleOutputImageScroll" pannable="true">
+               <content>
+                  <ImageView id="outputImageView" fx:id="outputImageView" pickOnBounds="true" preserveRatio="true" />
+               </content>
+               <tooltip>
+                  <Tooltip fx:id="outputImageToolTip" text="Empty Tooltip" />
+               </tooltip>
+            </ScrollPane>
+         </items>
+      </SplitPane>
+   </center>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="loadTarget" mnemonicParsing="false" onAction="#handleLoadButtonAction" text="Load" />
+            <Button id="executeTarget" fx:id="executeTarget" mnemonicParsing="false" onAction="#handleExecuteButtonAction" text="Execute" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
