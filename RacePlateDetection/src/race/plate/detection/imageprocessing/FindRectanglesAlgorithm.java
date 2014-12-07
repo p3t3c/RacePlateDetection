@@ -118,7 +118,7 @@ public class FindRectanglesAlgorithm implements IProcessingAlgorithm {
                         for (int j = 2; j < 5; j++) {
                             // find the maximum cosine of the angle between
                             // joint edges
-                            double cosine = Math.abs(angle(approxArray[j % 4], approxArray[j - 2], approxArray[j - 1]));
+                            double cosine = Math.abs(DetectRectanglesInContours.angle(approxArray[j % 4], approxArray[j - 2], approxArray[j - 1]));
                             maxCosine = Math.max(maxCosine, cosine);
                         }
 
@@ -144,16 +144,5 @@ public class FindRectanglesAlgorithm implements IProcessingAlgorithm {
         return outputImages;
     }
 
-    /**
-     * helper function: finds a cosine of angle between vectors from pt0->pt1
-     * and from pt0->pt2 <br>
-     * Although I think the dot product should also be able to do this, its close but I dont get the cosine part
-     **/
-    static double angle(Point pt1, Point pt2, Point pt0) {
-        double dx1 = pt1.x - pt0.x;
-        double dy1 = pt1.y - pt0.y;
-        double dx2 = pt2.x - pt0.x;
-        double dy2 = pt2.y - pt0.y;
-        return (dx1 * dx2 + dy1 * dy2) / Math.sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2) + 1e-10);
-    }
+   
 }
