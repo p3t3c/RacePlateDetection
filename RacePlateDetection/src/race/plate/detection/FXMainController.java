@@ -22,15 +22,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import race.plate.detection.imageprocessing.ColorPlaneExtractionAlgorithm;
+import race.plate.detection.imageprocessing.FindRectangles2Algorithm;
 import race.plate.detection.imageprocessing.FindRectanglesAlgorithm;
 import race.plate.detection.imageprocessing.RedBoxedPlateAlgorithm;
 import race.plate.detection.util.MatFXConversionUtil;
 
 public class FXMainController {
     private static final double ZOOM_SCALE_FACTOR = 1.1;
-    // private static final String DEFAULT_IMAGE_FILE_NAME = "/pic5.png";
+     private static final String DEFAULT_IMAGE_FILE_NAME = "/pic5.png";
     // private static final String DEFAULT_IMAGE_FILE_NAME = "/lena.png";
-    private static final String DEFAULT_IMAGE_FILE_NAME = "/BoxPlate1.jpg";
+//    private static final String DEFAULT_IMAGE_FILE_NAME = "/BoxPlate4.jpg";
 
     @FXML
     private Button executeTarget;
@@ -86,6 +87,7 @@ public class FXMainController {
          * TODO make it clearer where the algorthm is.
          */
         imageControl.applyProcessing(new RedBoxedPlateAlgorithm());
+//        imageControl.applyProcessing(new FindRectangles2Algorithm());
         outputImages = imageControl.getOutputImageSequence();
         outputImageIndex.set(outputImages.length - 1);
     }
