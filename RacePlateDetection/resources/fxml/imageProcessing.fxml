@@ -15,10 +15,13 @@
                   <ImageView id="inputImageView" fx:id="inputImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
                </content>
             </ScrollPane>
-            <ScrollPane>
+            <ScrollPane fx:id="outputImageScrollPane" onScroll="#handleOutputImageScroll">
                <content>
-                  <ImageView id="outputImageView" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView id="outputImageView" fx:id="outputImageView" pickOnBounds="true" preserveRatio="true" />
                </content>
+               <tooltip>
+                  <Tooltip fx:id="outputImageToolTip" text="Empty Tooltip" />
+               </tooltip>
             </ScrollPane>
          </items>
       </SplitPane>

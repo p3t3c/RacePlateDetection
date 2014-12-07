@@ -1,5 +1,10 @@
 package race.plate.detection;
 
+import org.opencv.core.Mat;
+
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -7,11 +12,14 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
+import race.plate.detection.imageprocessing.FindRectanglesAlgorithm;
 import race.plate.detection.util.MatFXConversionUtil;
 
 public class FXMainController {
@@ -24,15 +32,27 @@ public class FXMainController {
     private Button executeTarget;
 
     @FXML
-    private ImageView inputImageView;
+    private Button loadTarget;
 
     @FXML
-    private Button loadTarget;
+    private ImageView inputImageView;
 
     @FXML
     private ScrollPane inputImageScrollPane;
 
+    @FXML
+    private ImageView outputImageView;
+
+    @FXML
+    private ScrollPane outputImageScrollPane;
+
+    @FXML
+    private Tooltip outputImageToolTip;
+
     private ImageControl imageControl;
+
+    private IntegerProperty outputImageIndex;
+    private Mat[] outputImages;
 
     @FXML
     void initialize() {
@@ -41,11 +61,16 @@ public class FXMainController {
         imageControl = new ImageControl();
         imageControl.loadImageAsResource(DEFAULT_IMAGE_FILE_NAME);
 
+        outputImageIndex = new SimpleIntegerProperty(this, "OutputImageIndex", 0);
+
+        outputImageToolTip.textProperty().bind(outputImageIndex.asString());
     }
 
     @FXML
     protected void handleExecuteButtonAction(ActionEvent action) {
-        System.out.println("pressed");
+        imageControl.applyProcessing(new FindRectanglesAlgorithm());
+        outputImages = imageControl.getOutputImageSequence();
+        outputImageIndex.set(outputImages.length - 1);
     }
 
     @FXML
@@ -55,8 +80,28 @@ public class FXMainController {
         inputImageView.setImage(i);
         inputImageView.setFitWidth(i.getWidth());
         inputImageView.setFitWidth(i.getHeight());
-        // inputImageView.setViewport(new Rectangle2D(0, 0, i.getWidth(),
-        // i.getHeight()));
+    }
+
+    @FXML
+    void handleOutputImageScroll(ScrollEvent scrollEvent) {
+        zoomImageView(outputImageView, scrollEvent);
+        if (scrollEvent.isAltDown()) {
+            // TODO there is probably a better way to wrap up the roll over with a set of bindings
+            if (scrollEvent.getDeltaY() >= 0.0) {
+                if (outputImageIndex.get() == outputImages.length - 1)
+                    outputImageIndex.set(0); // Roll over to first
+                else
+                    outputImageIndex.set(outputImageIndex.get() + 1); // Go to next index
+                
+
+            } else {
+                if (outputImageIndex.get() == 0)
+                    outputImageIndex.set(outputImages.length - 1);
+                else
+                    outputImageIndex.set(outputImageIndex.get() - 1);
+            }
+            System.out.println(outputImageIndex);
+        }
     }
 
     @FXML
@@ -94,37 +139,38 @@ public class FXMainController {
     }
 
     /**
-     * Currently this isn't used.
-     * Was attempting to get the zoom point to be on the mouse pointer rather than the center of the view port.
-     * Giving up on it for the moment because it isn't really the hightest priority.
+     * Currently this isn't used. Was attempting to get the zoom point to be on
+     * the mouse pointer rather than the center of the view port. Giving up on
+     * it for the moment because it isn't really the hightest priority.
+     * 
      * @param scrollEvent
      */
     private void centerScrollPaneOnMouse(ScrollEvent scrollEvent) {
         ScrollPane scrollPane = (ScrollPane) scrollEvent.getSource();
         System.out.println(scrollPane.getBoundsInLocal());
-        System.out.println(scrollEvent.getX() +", " + scrollEvent.getY());
-        
-        System.out.println(scrollPane.getVmin() + " - " +scrollPane.getVmax());
-        System.out.println(scrollPane.getHmin() + " - " +scrollPane.getHmax());
-        
+        System.out.println(scrollEvent.getX() + ", " + scrollEvent.getY());
+
+        System.out.println(scrollPane.getVmin() + " - " + scrollPane.getVmax());
+        System.out.println(scrollPane.getHmin() + " - " + scrollPane.getHmax());
+
         Bounds scrollPaneBounds = scrollPane.getBoundsInLocal();
-        double scrollCenterX =  scrollPaneBounds.getWidth() / 2; 
-        double scrollCenterY =  scrollPaneBounds.getHeight() / 2;
-        
+        double scrollCenterX = scrollPaneBounds.getWidth() / 2;
+        double scrollCenterY = scrollPaneBounds.getHeight() / 2;
+
         double deltaX = scrollEvent.getX() - scrollCenterX;
         double deltaY = scrollEvent.getY() - scrollCenterY;
-        
+
         System.out.println(deltaX + ", " + deltaY);
-        
+
         // Normalise the deltas to the height and width of the bounds
         deltaX = deltaX / scrollPaneBounds.getWidth();
         deltaY = deltaY / scrollPaneBounds.getHeight();
-        
+
         System.out.println("normalised " + deltaX + ", " + deltaY);
-        
+
         scrollPane.setHvalue(scrollPane.getHvalue() + deltaX);
         scrollPane.setVvalue(scrollPane.getVvalue() + deltaY);
-        
+
     }
 
 }
