@@ -5,6 +5,8 @@ import org.opencv.core.Mat;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -51,7 +53,7 @@ public class FXMainController {
 
     private ImageControl imageControl;
 
-    private IntegerProperty outputImageIndex;
+    private SimpleIntegerProperty outputImageIndex;
     private Mat[] outputImages;
 
     @FXML
@@ -62,8 +64,18 @@ public class FXMainController {
         imageControl.loadImageAsResource(DEFAULT_IMAGE_FILE_NAME);
 
         outputImageIndex = new SimpleIntegerProperty(this, "OutputImageIndex", 0);
-
         outputImageToolTip.textProperty().bind(outputImageIndex.asString());
+
+        outputImageIndex.addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                Image i = MatFXConversionUtil.convertToFxImage(outputImages[newValue.intValue()]);
+                outputImageView.setImage(i);
+                outputImageView.setFitWidth(outputImageScrollPane.getWidth());
+
+            }
+        });
     }
 
     @FXML
@@ -78,21 +90,23 @@ public class FXMainController {
         Image i = MatFXConversionUtil.convertToFxImage(imageControl.getInputImage());
         assert i != null : "Image conversion didn't work";
         inputImageView.setImage(i);
-        inputImageView.setFitWidth(i.getWidth());
-        inputImageView.setFitWidth(i.getHeight());
+        inputImageView.setFitWidth(inputImageScrollPane.getWidth());
     }
 
     @FXML
     void handleOutputImageScroll(ScrollEvent scrollEvent) {
         zoomImageView(outputImageView, scrollEvent);
         if (scrollEvent.isAltDown()) {
-            // TODO there is probably a better way to wrap up the roll over with a set of bindings
+            // TODO there is probably a better way to wrap up the roll over with
+            // a set of bindings. Probably use a customer binding override the
+            // computerValue
             if (scrollEvent.getDeltaY() >= 0.0) {
                 if (outputImageIndex.get() == outputImages.length - 1)
                     outputImageIndex.set(0); // Roll over to first
                 else
-                    outputImageIndex.set(outputImageIndex.get() + 1); // Go to next index
-                
+                    outputImageIndex.set(outputImageIndex.get() + 1); // Go to
+                                                                      // next
+                                                                      // index
 
             } else {
                 if (outputImageIndex.get() == 0)

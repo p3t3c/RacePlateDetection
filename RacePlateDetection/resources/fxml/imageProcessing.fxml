@@ -10,12 +10,12 @@
    <center>
       <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
-            <ScrollPane fx:id="inputImageScrollPane" onScroll="#handleInputImageScroll" pannable="true">
+            <ScrollPane fx:id="inputImageScrollPane" fitToHeight="true" fitToWidth="true" onScroll="#handleInputImageScroll" pannable="true">
                <content>
                   <ImageView id="inputImageView" fx:id="inputImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
                </content>
             </ScrollPane>
-            <ScrollPane fx:id="outputImageScrollPane" onScroll="#handleOutputImageScroll">
+            <ScrollPane fx:id="outputImageScrollPane" onScroll="#handleOutputImageScroll" pannable="true">
                <content>
                   <ImageView id="outputImageView" fx:id="outputImageView" pickOnBounds="true" preserveRatio="true" />
                </content>
