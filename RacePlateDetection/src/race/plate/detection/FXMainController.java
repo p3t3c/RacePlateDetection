@@ -31,7 +31,7 @@ public class FXMainController {
     private static final double ZOOM_SCALE_FACTOR = 1.1;
 //     private static final String DEFAULT_IMAGE_FILE_NAME = "/pic5.png";
     // private static final String DEFAULT_IMAGE_FILE_NAME = "/lena.png";
-    private static final String DEFAULT_IMAGE_FILE_NAME = "/BoxPlate3.jpg";
+    private static final String DEFAULT_IMAGE_FILE_NAME = "/BoxPlate4.jpg";
 
     @FXML
     private Button executeTarget;
