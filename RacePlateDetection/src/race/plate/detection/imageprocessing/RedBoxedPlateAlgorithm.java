@@ -13,9 +13,11 @@ import org.opencv.imgproc.Imgproc;
 public class RedBoxedPlateAlgorithm implements IProcessingAlgorithm {
 
     private ColorPlaneExtractionAlgorithm colorPlaneExtraction;
+    private SquareMorphologyAlgorithm squareMorphologyAlgorithm;
 
     public RedBoxedPlateAlgorithm() {
         colorPlaneExtraction = new ColorPlaneExtractionAlgorithm();
+        squareMorphologyAlgorithm = new SquareMorphologyAlgorithm(17);
     }
 
     @Override
@@ -24,7 +26,7 @@ public class RedBoxedPlateAlgorithm implements IProcessingAlgorithm {
 
         // De-noise
         Mat blurredInput = new Mat();
-        Imgproc.blur(image, blurredInput, new Size(23, 23));
+        Imgproc.blur(image, blurredInput, new Size(27, 27));
         outputImages.add(blurredInput.clone());
         
         List<Mat> colorPlaneSplit = colorPlaneExtraction.processImage(blurredInput);
@@ -51,9 +53,15 @@ public class RedBoxedPlateAlgorithm implements IProcessingAlgorithm {
         Imgproc.adaptiveThreshold(blueChannelImage, thresholdOutput, MAX_VALUE, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, BLOCK_SIZE, CONSTANT);
         outputImages.add(thresholdOutput.clone());
 
+        // Morphology
+        List<Mat> morphOutputList = squareMorphologyAlgorithm.processImage(thresholdOutput);
+        outputImages.addAll(morphOutputList);
+        
         // Find contours
-        List<MatOfPoint> contours = findContours(thresholdOutput);
-        drawContours(contours, thresholdOutput, outputImages);
+//        List<MatOfPoint> contours = findContours(thresholdOutput);
+//        drawContours(contours, thresholdOutput, outputImages);
+        List<MatOfPoint> contours = findContours(morphOutputList.get(0));
+        drawContours(contours, morphOutputList.get(0), outputImages);
         
         DetectRectanglesInContours.findRectangles(image, contours, outputImages);
         
